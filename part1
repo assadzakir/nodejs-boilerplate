@@ -1,0 +1,73 @@
+yarn init
+yarn add express
+yarn add cross-env
+yarn add -D nodemon
+yarn add -D babel-preset-env babel-plugin-transform-object-rest-spread
+
+
+.babelrc
+{
+    "presets": [
+        [
+            "env",
+            {
+                "target": {
+                    "node": "current"
+                }
+            }
+        ]
+    ],
+    "plugins": [
+        [
+            "transform-object-rest-spread",
+            {
+                "useBuiltIns": true
+            }
+        ]
+    ]
+}
+
+yarn add -D webpack babel-core babel-loader webpack-node-externals
+
+webpack.config.js
+
+const nodeExternals = require('webpack-node-externals');
+const path = require('path');
+
+module.exports = {
+    target:'node',
+    externals: [nodeExternals()],
+    entry:{
+        'index':'./src/index.js',
+    },
+    output:{
+        path:path.join(__dirname, 'dist'),
+        filename: '[name].bundle.js',
+        libraryTarget: 'commonjs2',
+    },
+    module:{
+        rules:[
+            {
+                test:/\.js$/,
+                exclude: /node_modules/,
+                use:'babel-loader'
+            },
+        ],
+    },
+}
+
+yarn add -D eslint eslint-config-equimper
+
+.eslintrc
+
+{
+"extends": "equimper"
+}
+
+
+"scripts": {
+    "dev:build":"webpack -w",
+    "dev": "cross-env NODE_ENV=development nodemon dist/index.bundle.js"
+  },
+
+
